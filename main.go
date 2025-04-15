@@ -110,7 +110,8 @@ func main() {
 
 	doc := etree.NewDocument()
 	if err := doc.ReadFromBytes(samlData); err != nil {
-		log.Fatalf("Error parsing XML: %v", err)
+		log.Printf("Error parsing XML: %v", err)
+		return
 	}
 	// Build validation context
 	validationContext := &goxmldsig.ValidationContext{
@@ -129,7 +130,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("Signature validation successful!")
+	log.Println("Signature validation successful!")
 }
 
 func validateCertificate(certData []byte) *x509.Certificate {
