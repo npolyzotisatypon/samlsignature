@@ -108,6 +108,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if len(samlData) == 0 {
+		log.Printf("SAMLRequest is empty or not captured\n")
+		return
+	}
 	doc := etree.NewDocument()
 	if err := doc.ReadFromBytes(samlData); err != nil {
 		log.Printf("Error parsing XML: %v", err)

@@ -10,7 +10,7 @@ open -a "Google Chrome" --args --remote-debugging-port=9222
 
 ```bash
 > samlsignature -h
-Usage of ./dist/samlsignature_darwin_arm64_v8.0/samlsignature:
+Usage of samlsignature:
   -cert string
         [required] Path to certificate file
   -date string
@@ -19,4 +19,10 @@ Usage of ./dist/samlsignature_darwin_arm64_v8.0/samlsignature:
         IdP's Post URL (default "https://accounts.sap.com/saml2/idp/sso")
   -wayflessURL string
         Wayfless URL (default "https://dl.acm.org/action/ssostart?idp=https://accounts.sap.com")
+```
+
+## Sample usage
+
+```bash
+> samlsignature -cert acm.cert -wayflessURL "https://dl.acm.org/action/ssostart?idp=https://accounts.sap.com"  -postURL https://accounts.sap.com/saml2/idp/sso 
 ```
