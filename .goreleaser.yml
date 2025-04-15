@@ -1,0 +1,73 @@
+# .goreleaser.yml
+version: 2
+
+project_name: samlsignature
+
+before:
+  hooks:
+    # You may need to remove these hooks if your project doesn't use go modules
+    - go mod tidy
+    # Uncomment if you need to build web assets, etc.
+    # - make assets
+
+builds:
+  - 
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    # Ignore combinations that don't work (uncomment if needed)
+    # ignore:
+    #   - goos: darwin
+    #     goarch: 386
+    ldflags:
+      - -s -w 
+    # Main package path (change this to match your project structure)
+    # main: ./main
+archives:
+
+  - id: myapp
+
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+      #- docs/*
+    format_overrides: 
+      - goos: windows
+        format: zip
+      - goos: darwin
+        format: "tar.gz"
+     
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - '^chore:'
+      - Merge pull request
+      - Merge branch
+
+release:
+  github:
+    owner: npolyzotisatypon
+    name: samlsignature
+  # Uncomment to disable publishing to GitHub
+  # disable: true
+  # Uncomment to use draft releases
+  # draft: true
+  # Uncomment to use prerelease
+  # prerelease: auto
