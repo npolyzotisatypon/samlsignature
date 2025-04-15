@@ -38,9 +38,9 @@ archives:
       #- docs/*
     format_overrides: 
       - goos: windows
-        format: zip
+        formats: ['zip']
       - goos: darwin
-        format: "tar.gz"
+        formats: ["tar.gz"]
      
 
 checksum:
