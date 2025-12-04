@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/chromedp/cdproto/network"
@@ -65,7 +66,8 @@ func main() {
 	timeoutCtx, cancelTimeout := context.WithTimeout(ctx, browserTimeout)
 	defer cancelTimeout()
 
-	samlReady := make(chan struct{}, 1)
+	var samlOnce sync.Once
+	samlReady := make(chan struct{})
 	// Listen for network events
 	chromedp.ListenTarget(timeoutCtx, func(ev interface{}) {
 		switch e := ev.(type) {
@@ -100,11 +102,10 @@ func main() {
 				}
 				log.Printf("SAMLRequest: %s\n", samlData)
 
-				select {
-				case samlReady <- struct{}{}:
-				default:
-					// Channel already has a value, skip
-				}
+				// Signal completion only once, even if multiple POST requests occur
+				samlOnce.Do(func() {
+					close(samlReady)
+				})
 			}
 		}
 	})
@@ -120,7 +121,7 @@ func main() {
 			// Wait for navigation or response
 			select {
 			case <-samlReady:
-				close(samlReady)
+				// SAML request captured successfully
 			case <-time.After(navigationTimeout):
 				log.Printf("Timeout waiting for SAML request after %v\n", navigationTimeout)
 			case <-ctx.Done():
