@@ -1,29 +1,33 @@
+version: "2"
 run:
-  timeout: 5m
+  go: "1.25"
   tests: true
-  go: '1.25'
-
 linters:
   enable:
-    - errcheck      # Check for unchecked errors
-    - gosimple      # Simplify code
-    - govet         # Reports suspicious constructs
-    - ineffassign   # Detect ineffectual assignments
-    - staticcheck   # Advanced Go linter
-    - unused        # Check for unused constants, variables, functions and types
-    - gofmt         # Check whether code was gofmt-ed
-    - goimports     # Check import statements are formatted well
-    - misspell      # Finds commonly misspelled English words
-    - revive        # Fast, configurable, extensible, flexible, and beautiful linter for Go
-    - gosec         # Inspects source code for security problems
-
-linters-settings:
-  errcheck:
-    check-blank: true
-  revive:
-    confidence: 0.8
-
+    - gosec
+    - misspell
+    - revive
+  settings:
+    errcheck:
+      check-blank: true
+    revive:
+      confidence: 0.8
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 issues:
-  exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
